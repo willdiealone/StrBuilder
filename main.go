@@ -26,6 +26,7 @@ func (b *MyBuilder) String() string {
 	return unsafe.String(unsafe.SliceData(b.buffer), len(b.buffer))
 }
 
+// Grow расширяет буффер
 func (b *MyBuilder) Grow(n int) {
 	if n < 0 {
 		panic("negative buffer")
@@ -67,3 +68,8 @@ func main() {
 	fmt.Println(result)
 	fmt.Println(len(myBuilder.buffer))
 }
+
+// Hello World!!!!!!!!!!!!!!!!!!
+// 29
+// Hello World!!!!!!!!!!!!!!!!!!Hello
+// 34
