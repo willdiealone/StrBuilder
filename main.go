@@ -23,7 +23,7 @@ func (b *MyBuilder) Write(p []byte) (n int) {
 // String, который возвращает итоговую неизменяемую строку.
 func (b *MyBuilder) String() string {
 	// Создаем новуй header с длинной на исходый массив,
-	// чтобы избежать копирования
+	// чтобы избежать копирования.
 	return unsafe.String(unsafe.SliceData(b.buffer), len(b.buffer))
 }
 
