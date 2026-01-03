@@ -5,29 +5,28 @@ import (
 	"unsafe"
 )
 
-type MyBuilder struct {
+type MyStringBuilder struct {
 	buffer []byte
 }
 
-// NewMyBuilder Конструктор
-func NewMyBuilder() MyBuilder { return MyBuilder{} }
+// NewMyStringBuilder Конструктор
+func NewMyStringBuilder() MyStringBuilder { return MyStringBuilder{} }
 
-// Write, который добавляет данные в буфер и возвращаем кол-во записанных байт
-func (b *MyBuilder) Write(p []byte) (n int) {
-	// Просто добавляем последовательность байт
+// Write добавляет данные в буфер и возвращаем кол-во записанных байт
+func (b *MyStringBuilder) Write(p []byte) (n int) {
 	b.buffer = append(b.buffer, p...)
 	return len(b.buffer)
 }
 
-// String, который возвращает итоговую неизменяемую строку.
-func (b *MyBuilder) String() string {
+// String возвращает итоговую неизменяемую строку.
+func (b *MyStringBuilder) String() string {
 	// Создаем новый header с длинной на исходый массив,
 	// чтобы избежать копирования.
 	return unsafe.String(unsafe.SliceData(b.buffer), len(b.buffer))
 }
 
 // Grow расширяет буффер
-func (b *MyBuilder) Grow(n int) {
+func (b *MyStringBuilder) Grow(n int) {
 	if n < 0 {
 		panic("negative buffer")
 	}
@@ -37,7 +36,8 @@ func (b *MyBuilder) Grow(n int) {
 	}
 }
 
-func (b *MyBuilder) grow(n int) {
+// grow расширяет буффер
+func (b *MyStringBuilder) grow(n int) {
 	// Создаем новый слайс
 	// Можно было бы и так, но мы будем занулять память
 	//buf := bytealg.MakeNoZero(2*cap(b.buf) + n)[:len(b.buf)]
@@ -50,7 +50,7 @@ func (b *MyBuilder) grow(n int) {
 
 func main() {
 
-	myBuilder := NewMyBuilder()
+	myBuilder := NewMyStringBuilder()
 	myBuilder.Write(([]byte)("Hello"))
 	myBuilder.Write(([]byte)(" World"))
 	myBuilder.Write(([]byte)("!!!"))
