@@ -7,7 +7,7 @@ import (
 )
 
 type MyStringBuilder struct {
-	addr   *MyStringBuilder
+	ptr    *MyStringBuilder
 	buffer []byte
 }
 
@@ -23,12 +23,12 @@ func NewMyStringBuilder() MyStringBuilder { return MyStringBuilder{} }
 // Значение «неизменяемой» строки в первом билдере внезапно изменится.
 // Это приведет к непредсказуемому поведению программы и нарушению безопасности памяти.
 func (b *MyStringBuilder) copyCheck() {
-	if b.addr == nil {
+	if b.ptr == nil {
 		// Скрываем указатель от escape анализа, предотвращая попадание в кучу
 		// Не разрешено, по этому придется иметь дело с heap
 		//b.addr = (*MyStringBuilder)(abi.NoEscape(unsafe.Pointer(b)))
-		b.addr = b
-	} else if b.addr != b {
+		b.ptr = b
+	} else if b.ptr != b {
 		panic("bad address")
 	}
 }
@@ -79,7 +79,7 @@ func (b *MyStringBuilder) Cap() int { return cap(b.buffer) }
 
 // Reset сбрасываем билдер
 func (b *MyStringBuilder) Reset() {
-	b.addr = nil
+	b.ptr = nil
 	b.buffer = nil
 }
 
@@ -116,13 +116,15 @@ func main() {
 	//     1         1        1       1         1       3                           3                         4
 	// [01001000 01100101 01101100 01101100 01101111 11100010 10011101 10100100 11101111 10111000 10001111 11110000 10011111 10010001 10001101]
 	// LittleEndian
+	fmt.Println()
+	// 15
 	fmt.Println(len(myBuilder.buffer))
 	myBuilder.Grow(100)
 	myBuilder.Write(([]byte)("Hello"))
 	result = myBuilder.String()
 	fmt.Println(result)
-	fmt.Println(len(myBuilder.buffer))
 	// Hello❤️👍Hello
+	fmt.Println(len(myBuilder.buffer))
 	// 20
 	myBuilder.Reset()
 	_, _ = myBuilder.WriteString("Monkey👍")
