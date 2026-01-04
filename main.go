@@ -108,25 +108,26 @@ func (b *MyStringBuilder) WriteRune(r rune) (int, error) {
 func main() {
 
 	myBuilder := NewMyStringBuilder()
-	myBuilder.Write(([]byte)("Hello"))
-	myBuilder.Write(([]byte)(" World"))
-	myBuilder.Write(([]byte)("!!!"))
-	myBuilder.Write(([]byte)("!!!"))
-	myBuilder.Write(([]byte)("!!!"))
-	myBuilder.Write(([]byte)("!!!"))
-	myBuilder.Write(([]byte)("!!!"))
-	myBuilder.Write(([]byte)("!!!"))
+	myBuilder.Write(([]byte)("Hello❤️👍"))
 	result := myBuilder.String()
-	fmt.Println(result)
+	pointerRes := unsafe.StringData(result)
+	slice := unsafe.Slice(pointerRes, len(result))
+	fmt.Printf("%08b", slice)
+	//     1         1        1       1         1       3                           3                         4
+	// [01001000 01100101 01101100 01101100 01101111 11100010 10011101 10100100 11101111 10111000 10001111 11110000 10011111 10010001 10001101]
+	// LittleEndian
 	fmt.Println(len(myBuilder.buffer))
 	myBuilder.Grow(len(result))
 	myBuilder.Write(([]byte)("Hello"))
 	result = myBuilder.String()
 	fmt.Println(result)
 	fmt.Println(len(myBuilder.buffer))
-}
+	// Hello❤️👍Hello
+	// 20
+	myBuilder.Reset()
+	_, _ = myBuilder.WriteString("Monkey👍")
+	result = myBuilder.String()
+	fmt.Println(result)
+	// Monkey👍
 
-// Hello World!!!!!!!!!!!!!!!!!!
-// 29
-// Hello World!!!!!!!!!!!!!!!!!!Hello
-// 34
+}
