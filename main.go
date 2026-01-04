@@ -117,7 +117,7 @@ func main() {
 	// [01001000 01100101 01101100 01101100 01101111 11100010 10011101 10100100 11101111 10111000 10001111 11110000 10011111 10010001 10001101]
 	// LittleEndian
 	fmt.Println(len(myBuilder.buffer))
-	myBuilder.Grow(len(result))
+	myBuilder.Grow(100)
 	myBuilder.Write(([]byte)("Hello"))
 	result = myBuilder.String()
 	fmt.Println(result)
